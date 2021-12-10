@@ -1,0 +1,43 @@
+﻿@page "/counter"
+@inject Blazored.LocalStorage.ILocalStorageService localStorage
+
+<PageTitle>Counter</PageTitle>
+
+<h1>Counter</h1>
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-danger" @onclick="RemoveCache">Remove Cache</button>
+
+@code {
+    private int currentCount = 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(await localStorage.ContainKeyAsync("count"))
+        {
+            currentCount = await localStorage.GetItemAsync<int>("count");
+        }
+
+        if(! await localStorage.ContainKeyAsync("person"))
+        {
+            var person = new Person { Id = 4, Count = 42, Name = "Mario Rossi" };
+            await localStorage.SetItemAsync<Person>("person", person);
+        }
+    }
+
+    private async Task RemoveCache()
+    {
+        if(await localStorage.ContainKeyAsync("person"))
+        {
+            await localStorage.RemoveItemAsync("person");
+        } 
+    }
+
+    private async Task IncrementCount()
+    {
+        currentCount++;
+        await localStorage.SetItemAsync<int>("count", currentCount);
+    }
+}

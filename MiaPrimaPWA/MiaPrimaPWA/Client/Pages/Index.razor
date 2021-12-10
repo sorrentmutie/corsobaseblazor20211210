@@ -1,0 +1,59 @@
+﻿@page "/"
+@inject Blazored.SessionStorage.ISessionStorageService service
+@inject TG.Blazor.IndexedDB.IndexedDBManager dbManager
+
+<PageTitle>Index</PageTitle>
+
+<h1>Ciao, mondo</h1>
+
+Welcome to your new app.
+@foreach (var person in People)
+{
+    <p>@person.Id @person.Name @person.Count</p>
+}
+
+
+@code {
+    public List<Person> People { get; set; } = new List<Person>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        var random = new Random();
+        var person = new Person { Id = 1, Name = "Luigi Bianchi", Count = random.Next(1, 1000) };
+        await service.SetItemAsync<Person>("person2", person);
+
+        await dbManager.OpenDb();
+        //var newrecord = new StoreRecord<Person>
+        //    {
+        //        Storename = "People",
+        //        Data = person
+        //    };
+        //await dbManager.AddRecord(newrecord);
+
+
+        //for (var i = 0; i < 10000; i++)
+        //{
+        //    var randomPerson = new Person { Id = i, Name = $"{i}", Count = random.Next(1, 1000) };
+        //    var newrandomrecord = new StoreRecord<Person>
+        //        {
+        //            Storename = "People",
+        //            Data = randomPerson
+        //        };
+        //    await dbManager.AddRecord(newrandomrecord);
+        //}
+
+        var p = await dbManager.GetRecordById<int, Person>("People", 1);
+        People.Add(p);
+
+        // var results = await dbManager.GetRecords<Person>("People");
+        // dbManager.Stores[0].Name
+
+        //if (results.Any())
+        //{
+        //    People = results;
+        //}
+
+
+
+    }
+}

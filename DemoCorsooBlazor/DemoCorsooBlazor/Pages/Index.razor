@@ -1,0 +1,32 @@
+﻿@page "/"
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, world!</h1>
+
+<FragmentTest Value="@Name">
+    <Child>
+        <h3> Cognome: Rossi</h3>
+    </Child>
+    <ChildTwo>
+        <p>Sono child2</p>
+    </ChildTwo>
+</FragmentTest>
+
+<InputFile OnChange="LoadFile">
+
+</InputFile>
+
+@code {
+    private string Name = "Mario";
+
+    private void LoadFile(InputFileChangeEventArgs e)
+    {
+        var myfiles = e.GetMultipleFiles(1);
+        foreach(var file in myfiles)
+        {
+            Name = $"{file.Name} {file.Size} {file.ContentType} {file.LastModified}";
+        }
+    }
+
+}

@@ -1,0 +1,64 @@
+﻿@page "/reqresnewuser"
+@inject IReqResData service
+
+@Message
+@*<EditForm Model="@Request" OnValidSubmit="() => Save()">
+
+    <DataAnnotationsValidator></DataAnnotationsValidator>
+
+    <div class="form-group">
+        <label for="name">Name</label>
+        <InputText id="name" @bind-Value="Request.Name" class="form-control"></InputText>
+        <ValidationMessage For="() => Request.Name"></ValidationMessage>
+    </div>
+
+
+    <div class="form-group">
+        <label for="job">Job</label>
+        <InputText id="job" @bind-Value="Request.Job" class="form-control"></InputText>
+         <ValidationMessage For="() => Request.Job"></ValidationMessage>
+    </div>
+
+
+    <button type="submit" class="btn btn-info">OK</button>
+    <button type="button" class="btn btn-warning" @onclick="() => Cancel()">Cancel</button>
+</EditForm>*@
+
+<GenericDetails TItem="ReqResRequest" Current="Request" OnSave="Save" OnCancel="Cancel">
+    <FormFields>
+
+        <MyInputText Id="name" Label="Name" @bind-Value="Request.Name" ></MyInputText>
+        <MyInputText Id="job" Label="Job" @bind-Value="Request.Job" ></MyInputText>
+
+@*        <div class="form-group">
+            <label for="name">Name</label>
+            <InputText id="name" @bind-Value="Request.Name" class="form-control"></InputText>
+            <ValidationMessage For="() => Request.Name"></ValidationMessage>
+        </div>*@
+       @* <div class="form-group">
+            <label for="job">Job</label>
+            <InputText id="job" @bind-Value="Request.Job" class="form-control"></InputText>
+             <ValidationMessage For="() => Request.Job"></ValidationMessage>
+        </div>*@
+    </FormFields>
+</GenericDetails>
+
+
+
+@code {
+    public ReqResRequest Request { get; set; } = new ReqResRequest();
+    public string Message = "";
+
+    public async Task Save()
+    {
+        if(Request!= null){
+            Message = await service.PostData(Request);
+            Request = new ReqResRequest();
+        } 
+    }
+
+    public void Cancel()
+    {
+        Request = new ReqResRequest();
+    }
+}

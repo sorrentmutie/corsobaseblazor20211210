@@ -1,0 +1,36 @@
+﻿@page "/counter"
+@inject IOrderData orderservice
+
+<PageTitle>@title</PageTitle>
+
+<h1>Counter</h1>
+
+
+<OrderList Orders="PastOrdersList" OnDelete="DeletePastOrder" Title="Past Orders"></OrderList>
+
+
+<p role="status">Current count: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+
+@code {
+    private int currentCount = 0;
+    private string title = "Ciao";
+
+    protected override void OnInitialized()
+    {
+        PastOrdersList = orderservice.GetPastOrders();
+    }
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    private void DeletePastOrder(Order order)
+    {
+        PastOrdersList.Remove(order);
+    }
+
+    public List<Order> PastOrdersList { get; set; } = new List<Order>();
+}

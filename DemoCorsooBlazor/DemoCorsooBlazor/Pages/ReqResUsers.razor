@@ -1,0 +1,50 @@
+﻿@using DemoCorsoBlazor.Library.Components
+
+@page "/reqresusers"
+@inject IReqResData reqresService
+<h3>ReqRes Users</h3>
+<button class="btn btn-danger" @onclick="Cancel">Cancel</button>
+@Message
+
+<div style="height:300px; overflow-y:scroll">
+    <Virtualize Items="@Users" Context="user" >
+        <MyUserCard user="user"></MyUserCard>
+    </Virtualize>
+
+@*@foreach(var user in Users)
+{
+    
+}*@
+</div>
+
+
+
+
+@code {
+
+    List<ReqResUser> Users { get; set; } = new List<ReqResUser> ();
+    string Message = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        var reqresData = await reqresService.GetData();
+        if(reqresData != null && reqresData.data != null)
+        {
+            Users = reqresData.data;
+        }
+
+        var firstUser = Users[0];
+        for(var j = 1; j < 1000; j++)
+        {
+            Users.Add(firstUser);
+        }
+
+    }
+
+    private void Cancel()
+    {
+        reqresService.Cancel();
+        Message = "Richiesta cancellata";
+    }
+
+}

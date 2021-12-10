@@ -1,0 +1,67 @@
+﻿@page "/orders"
+@inject IOrderData ordersService
+
+
+@if(CurrentOrder == null)
+{
+    <button @onclick="CreateOrder" class="btn alert-success">Crea Ordine</button>
+    <OrderList Orders="@OrdersList" Title="@title" OnDelete="Delete" OnEdit="Edit"></OrderList>
+} else
+{
+    <OrderDetails CurrentOrder="CurrentOrder" OnCancel="Cancel" OnSave="Save"></OrderDetails>    
+}
+
+
+
+@code {
+    private string title = "Ordini Correnti";
+    private Order? CurrentOrder;
+
+    public List<Order> OrdersList { get; set; } = new List<Order>();
+
+    private void Cancel()
+    {
+        CurrentOrder = null;
+    }
+
+    private void Edit(Order order)
+    {
+        CurrentOrder = order;
+    }
+
+    private void Save(Order order)
+    {
+        var idMax = OrdersList.Max(o => o.Id);
+
+        if(order.Id == idMax + 1)
+        {
+            OrdersList.Add(order);
+        } else
+        {
+            var ord = OrdersList.FirstOrDefault(o => o.Id == order.Id); 
+            if(ord != null)
+            {
+                ord.Description = order.Description;
+            }
+        }
+
+        CurrentOrder = null;
+    }
+
+    private void Delete(Order order)
+    {
+        OrdersList.Remove(order);
+    }
+
+    private void CreateOrder()
+    {
+        CurrentOrder = new Order { Date = DateTime.Today, Id = OrdersList.Max(o => o.Id) + 1};
+    }
+
+    protected override void OnInitialized()
+    {
+        OrdersList = ordersService.GetCurrentOrders();
+        throw new Exception("Errore!");
+    }
+
+}

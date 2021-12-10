@@ -1,0 +1,18 @@
+﻿<h3>My User Card</h3>
+
+@if(user != null)
+{
+<div class="card" style="width: 18rem;margin-bottom:10px">
+  <img src="@user.avatar" class="card-img-top">
+  <div class="card-body">
+    <h5 class="card-title">@user.FirstName @user.LastName</h5>
+    <p class="card-text">@user.email</p>
+  </div>
+</div>
+}
+
+@code {
+    [Parameter] 
+    public ReqResUser? user { get; set; }
+}
+

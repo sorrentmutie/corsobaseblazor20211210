@@ -1,0 +1,44 @@
+﻿@inject IJSRuntime jsRuntime
+
+<div id="map" style="height: @(Height)px" @ref="map"></div>
+
+@code {
+    private ElementReference map;
+    private bool firstRender = true;
+
+    [Parameter] public int Zoom { get; set; } = 10;
+    [Parameter] public int Height { get; set; } = 100;
+    [Parameter] public string Center { get; set; } = "Rome, Italy";
+    [Parameter] public List<string> Markers { get; set; } = new List<string>();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if(!firstRender)
+        {
+            await InitMap();
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if(firstRender)
+        {
+            await InitMap();
+            this.firstRender = false;
+        }
+    }
+
+
+    private async Task InitMap()
+    {
+        await jsRuntime.InvokeVoidAsync("initMap", map, Zoom, Center, Markers);
+    }
+
+    [JSInvokable]
+    public static string InfoWindow(string s)
+    {
+        return $"<h3> Ecco la mia InfoWindow da C#!</h3>" +
+                $"<div class='alert alert-danger'>{s}</div>";
+    }
+
+}

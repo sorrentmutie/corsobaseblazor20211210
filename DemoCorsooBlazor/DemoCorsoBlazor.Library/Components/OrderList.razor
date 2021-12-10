@@ -1,0 +1,41 @@
+﻿
+<h3>@Title</h3>
+<table class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Data</th>
+            <th>Descrizione</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach(var order in Orders)
+{
+    <tr>
+        <td>@order.Id</td>
+        <td>@order.Date.ToShortDateString()</td>
+        <td>@order.Description</td>
+        <td>
+            <button class="btn btn-success" @onclick="() => OnDelete.InvokeAsync(order)">Rimuovi</button>
+            <button class="btn btn-warning" @onclick="() => OnEdit.InvokeAsync(order)">Modifica</button>    
+        </td>
+    </tr>
+}  
+</tbody>
+</table>
+
+@code {
+    [Parameter]
+    public string Title { get; set; } = String.Empty;
+
+    [Parameter]
+    public List<Order> Orders{ get; set; } = new List<Order>();
+
+    [Parameter]
+    public EventCallback<Order> OnDelete { get; set; }
+
+    [Parameter]
+    public EventCallback<Order> OnEdit { get; set; }
+
+}

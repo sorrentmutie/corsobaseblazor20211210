@@ -1,0 +1,13 @@
+﻿@Child
+<h3>@Value</h3>
+<div style="background-color: red; color: white">
+    @ChildTwo
+</div>
+
+@code {
+    [Parameter] public string Value { get; set; } = string.Empty;
+
+    [Parameter] public RenderFragment Child { get; set; }
+    [Parameter] public RenderFragment ChildTwo { get; set; }
+
+}

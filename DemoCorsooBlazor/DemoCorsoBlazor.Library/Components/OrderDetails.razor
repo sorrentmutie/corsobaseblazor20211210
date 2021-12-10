@@ -1,0 +1,38 @@
+﻿<EditForm Model="CurrentOrder" OnValidSubmit="() => OnSave.InvokeAsync(CurrentOrder)">
+
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <div class="form-group">
+        <label for="id">Id</label>
+        <InputNumber id="id" class="form-control" @bind-Value="CurrentOrder.Id"/>
+    </div>
+
+    <div class="form-group">
+        <label for="date">Date</label>
+        <InputDate id="date" class="form-control" @bind-Value="CurrentOrder.Date"/>
+    </div>
+
+    <div class="form-group">
+        <label for="price">Price</label>
+        <InputNumber id="price" class="form-control" @bind-Value="CurrentOrder.Price"/>
+    </div>
+
+    <div class="form-group">
+        <label for="desc">Description</label>
+        <InputText id="desc" class="form-control" @bind-Value="CurrentOrder.Description"/>
+        <ValidationMessage For="() => CurrentOrder.Description"></ValidationMessage>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <button type="button" class="btn btn-primary" @onclick="() => OnCancel.InvokeAsync()">Cancel</button>
+</EditForm>
+
+
+@code {
+    [Parameter]
+    public Order CurrentOrder { get; set; } = new Order();
+    [Parameter]
+    public EventCallback<Order> OnSave { get; set; }
+    [Parameter]
+    public EventCallback OnCancel { get; set; }
+}

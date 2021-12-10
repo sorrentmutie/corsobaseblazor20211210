@@ -1,0 +1,15 @@
+﻿@inject IJSRuntime jsRuntime
+
+<div class="my-component">
+    This component is defined in the <strong>SecondaDemo.Library</strong> library.
+    <button @onclick="Esegui">Esegui</button>
+</div>
+
+
+@code {
+    private async Task Esegui()
+    {
+        var interop = new ExampleJsInterop(jsRuntime);
+        await interop.Prompt("Ciao, ciao!");
+    }
+}

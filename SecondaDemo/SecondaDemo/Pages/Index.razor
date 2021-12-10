@@ -1,0 +1,52 @@
+﻿@page "/"
+@inject IJSRuntime jsRuntime
+
+<PageTitle>Index</PageTitle>
+
+<h1>Hello, javascript! @Result </h1>
+<button @onclick="() => EseguiJavascript()" class="btn btn-success">Esegui Javascript</button>
+<button @onclick="() => MostraModale()" class="btn btn-warning"> Mostra Modale</button>
+
+
+<MyModal Id="mioId" Title="My First Modal Component" OnSave="Save">
+    <ChildContent>
+        <p>Here is my custom content</p>
+    </ChildContent>
+</MyModal>
+
+<MyMap Zoom="14" Height="400" Center="@Address" Markers="@Markers"></MyMap>
+
+
+@code {
+    public int Result = 0;
+    public string Address = "Via Toledo 1, Napoli, Italia";
+    public List<string> Markers = new List<string>
+    {
+        "Via Toledo 1, Napoli, Italia",
+        "Piazza Duomo 1, Milano, Italy"
+    };
+
+    private async Task Save()
+    {
+        await jsRuntime.InvokeVoidAsync("hideModal", "mioId");
+    }
+
+    private async Task MostraModale()
+    {
+        await jsRuntime.InvokeVoidAsync("showModal", "mioId");
+    }
+
+    private async Task EseguiJavascript()
+    {
+        //Result = await jsRuntime.InvokeAsync<int>("miaPrimaFunzione", 3, 4);
+        var myInterop = new MyJavascriptInterop(jsRuntime);
+        // await myInterop.MiaTerzaFunzione();
+        await myInterop.CallSayHello("Mario Rossi");
+    }
+
+    [JSInvokable]
+    public static Task<int[]> ReturnArrayAsync()
+    {
+        return Task.FromResult(new int[] { 2, 3, 4, 5 });
+    }
+}
